@@ -2,72 +2,37 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Envio de WhatsApp via UltraMsg</title>
+    <title>Envio automático via UltraMsg</title>
 </head>
 <body>
-    <h2>Enviar Mensagem no WhatsApp</h2>
-
-    <form id="whatsappForm">
-        <label>
-            Instance ID:<br>
-            <input type="text" id="instanceId" value="instance134890" required>
-        </label><br><br>
-
-        <label>
-            Token:<br>
-            <input type="text" id="token" value="x9gchfy62lh2zv70" required>
-        </label><br><br>
-
-        <label>
-            Número (incluindo DDI, ex: 5591999999999):<br>
-            <input type="text" id="phone" required>
-        </label><br><br>
-
-        <label>
-            Mensagem:<br>
-            <textarea id="message" rows="4" cols="50" required></textarea>
-        </label><br><br>
-
-        <button type="submit">Enviar</button>
-    </form>
-
-    <div id="response"></div>
+    <div id="status">Enviando mensagem...</div>
 
     <script>
-        // Função para ler parâmetros da URL
+        // Pega parâmetros da URL
         function getQueryParam(name) {
             const params = new URLSearchParams(window.location.search);
             return params.get(name);
         }
 
-        // Ao carregar a página, preenche os campos com os parâmetros da URL, se existirem
+        // Ao carregar a página, envia a mensagem automaticamente
         window.onload = function () {
-            const phoneParam = getQueryParam("phone");
-            const messageParam = getQueryParam("message");
+            const phone = getQueryParam("phone");
+            const message = getQueryParam("message");
 
-            if (phoneParam) {
-                document.getElementById("phone").value = phoneParam;
+            // ID e Token fixos ou poderiam ser passados por URL também
+            const instanceId = "instance134890";
+            const token = "x9gchfy62lh2zv70";
+
+            if (!phone || !message) {
+                document.getElementById("status").innerText = "Erro: número ou mensagem ausentes na URL.";
+                return;
             }
-
-            if (messageParam) {
-                document.getElementById("message").value = decodeURIComponent(messageParam);
-            }
-        };
-
-        // Lógica de envio via API UltraMsg
-        document.getElementById("whatsappForm").addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const instanceId = document.getElementById("instanceId").value;
-            const token = document.getElementById("token").value;
-            const phone = document.getElementById("phone").value;
-            const message = document.getElementById("message").value;
 
             const url = `https://api.ultramsg.com/${instanceId}/messages/chat`;
             const formData = new URLSearchParams();
             formData.append("token", token);
             formData.append("to", phone);
-            formData.append("body", message);
+            formData.append("body", decodeURIComponent(message));
 
             fetch(url, {
                 method: "POST",
@@ -78,12 +43,13 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("response").innerText = "Resposta da API:\n" + JSON.stringify(data, null, 2);
+                document.getElementById("status").innerText = "Mensagem enviada com sucesso.";
+                console.log(data);
             })
             .catch(error => {
-                document.getElementById("response").innerText = "Erro: " + error;
+                document.getElementById("status").innerText = "Erro ao enviar: " + error;
             });
-        });
+        };
     </script>
 </body>
 </html>
