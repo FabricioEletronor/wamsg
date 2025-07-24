@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Envio Automático de WhatsApp via UltraMsg</title>
+</head>
+<body>
+    <h2>Enviando mensagem automaticamente...</h2>
+    <div id="response">Aguardando resposta da API...</div>
+
+    <script>
+        window.addEventListener("load", function() {
+            const instanceId = "instance134890";
+            const token = "x9gchfy62lh2zv70";
+            const phone = "5551996067703";
+            const message = "Teste UltraMsg, Fabricio Lima";
+
+            const url = `https://api.ultramsg.com/${instanceId}/messages/chat`;
+            const formData = new URLSearchParams();
+            formData.append("token", token);
+            formData.append("to", phone);
+            formData.append("body", message);
+
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = "Resposta da API: " + JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("response").innerText = "Erro: " + error;
+            });
+        });
+    </script>
+</body>
+</html>
