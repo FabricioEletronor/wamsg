@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Envio de WhatsApp via UltraMsg</title>
+</head>
+<body>
+    <h2>Enviar Mensagem no WhatsApp</h2>
+    <form id="whatsappForm">
+        <label>Instance ID:<br><input type="text" id="instanceId" value="instance134890" required></label><br><br>
+        <label>Token:<br><input type="text" id="token" value="x9gchfy62lh2zv70" required></label><br><br>
+        <label>Número (incluindo DDI, ex: 5591999999999):<br><input type="text" id="phone" value="5551996067703" required></label><br><br>
+        <label>Mensagem:<br><textarea id="message" rows="4" cols="50" required>Teste UltraMsg, Fabricio Lima</textarea></label><br><br>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById("whatsappForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const instanceId = document.getElementById("instanceId").value;
+            const token = document.getElementById("token").value;
+            const phone = document.getElementById("phone").value;
+            const message = document.getElementById("message").value;
+
+            const url = `https://api.ultramsg.com/${instanceId}/messages/chat`;
+            const formData = new URLSearchParams();
+            formData.append("token", token);
+            formData.append("to", phone);
+            formData.append("body", message);
+
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = "Resposta da API: " + JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("response").innerText = "Erro: " + error;
+            });
+        });
+    </script>
+</body>
+</html>
