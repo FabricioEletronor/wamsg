@@ -1,4 +1,22 @@
-<script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Envio de WhatsApp via UltraMsg</title>
+</head>
+<body>
+    <h2>Enviar Mensagem no WhatsApp</h2>
+    <form id="whatsappForm">
+        <label>Instance ID:<br><input type="text" id="instanceId" value="instance134890" required></label><br><br>
+        <label>Token:<br><input type="text" id="token" value="x9gchfy62lh2zv70" required></label><br><br>
+        <label>Número (incluindo DDI, ex: 5591999999999):<br><input type="text" id="phone" value="5551996067703" required></label><br><br>
+        <label>Mensagem:<br><textarea id="message" rows="4" cols="50" required>Teste UltraMsg, Fabricio Lima</textarea></label><br><br>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
     // Função para obter os parâmetros da URL
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -43,3 +61,6 @@
         });
     });
 </script>
+
+</body>
+</html>
