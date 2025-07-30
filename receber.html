@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Mensagens via UltraMsg</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+        }
+    </style>
+    <script>
+        async function listarMensagens() {
+            const instanceId = "instance134890"; // Substitua pelo seu
+            const token = "x9gchfy62lh2zv70";     // Substitua pelo seu
+
+            const url = `https://api.ultramsg.com/${instanceId}/messages?token=${token}&page=1&limit=10&status=all&sort=desc`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro na requisição: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Exibir mensagens
+                const output = data.items.map(msg =>
+                    `De: ${msg.from}\nPara: ${msg.to}\nMensagem: ${msg.body}\n---`
+                ).join('\n\n');
+
+                document.getElementById("resultado").value = output || "Nenhuma mensagem encontrada.";
+
+            } catch (error) {
+                console.error(error);
+                alert("Erro ao buscar mensagens.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Listar Mensagens do WhatsApp via UltraMsg</h2>
+    <button onclick="listarMensagens()">Buscar Mensagens</button>
+    <textarea id="resultado" readonly></textarea>
+</body>
+</html>
